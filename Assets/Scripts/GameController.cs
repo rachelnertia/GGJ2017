@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour {
 
+    public GameObject crowdMemberPrefab;
+
     // Use this for initialization
 	void Start () {
 		
