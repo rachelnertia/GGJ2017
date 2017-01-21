@@ -9,7 +9,7 @@ public class CrowdMemberController : MonoBehaviour {
         return handsUp;
     }
 
-    public KeyCode keyCode;
+    public GenericInput input;
 
     public Sprite[] frames = new Sprite[2];
 
@@ -24,7 +24,7 @@ public class CrowdMemberController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKey(keyCode)) {
+		if (input.IsActive()) {
             if (!handsUp) {
                 // Go to hands up frame.
                 gameObject.GetComponent<SpriteRenderer>().sprite = frames[1];
