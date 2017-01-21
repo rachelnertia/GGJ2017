@@ -19,7 +19,11 @@ public class Grid {
 	public List<GridInfo> grid = new List<GridInfo>();
 	
 	// both starting values have to be lower than ending
-	public Grid (int columns, int rows, Vector2 startingPos, Vector2 endingPos) {
+	// public Grid (int columns, int rows, Vector2 startingPos, Vector2 endingPos) {
+	public Grid (int crowdSize, Vector2 startingPos, Vector2 endingPos) {
+		
+		int rows = 4;
+		int columns = crowdSize/rows;
 		
 		int totalPeople = columns * rows;
 		
