@@ -118,14 +118,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 378aab286a8f23a4dac945299ad6dbf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crowdSize: 100
-  groupSize: 20
+  crowdSize: 40
+  groupSize: 8
   crowdMemberPrefab: {fileID: 1551631940448650, guid: 038ad60b57982a74e99d6eac4787f1dc,
     type: 2}
   selectionRectPrefab: {fileID: 1112602626902906, guid: 0e05589fca864fb48a27e4ceb9bb3244,
     type: 2}
   waveFrontMarkerPrefab: {fileID: 1923255432782578, guid: 10cc430b944b68e438e4b375feca789e,
     type: 2}
+  idleFrames:
+  - {fileID: 21300000, guid: 481e147c588b1cf4fa1a0030bef910a9, type: 3}
+  - {fileID: 21300000, guid: 2bdaf28d0e2b8d14aab2b49cbf4dbf8c, type: 3}
+  - {fileID: 21300000, guid: 240698e9933e5924996025a9f4f001be, type: 3}
+  - {fileID: 21300000, guid: ac13457c3c3740848b20c77eccf3564e, type: 3}
+  - {fileID: 21300000, guid: 7befd82507d4c674ca7dd5cbbcadafdf, type: 3}
+  - {fileID: 21300000, guid: 8e4c4cd2dd3c0214a9916bd74781ae3c, type: 3}
+  armsUpFrames:
+  - {fileID: 21300000, guid: dada7b7c77f687841867ece5329c3978, type: 3}
+  - {fileID: 21300000, guid: a9eb2cf78fb58a74a9f34495f3371453, type: 3}
+  - {fileID: 21300000, guid: 95ffe80149b14f74f9ae7a48f750577e, type: 3}
+  - {fileID: 21300000, guid: db8762d80c9b0b0488d7f91072ad43b1, type: 3}
+  - {fileID: 21300000, guid: 97c90759d16962e469a79b4fdf265e88, type: 3}
+  - {fileID: 21300000, guid: da8a6bd3e01eef14eb0bf8270492f0a8, type: 3}
 --- !u!4 &278344351
 Transform:
   m_ObjectHideFlags: 0

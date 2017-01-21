@@ -199,6 +199,8 @@ public class GameController : MonoBehaviour {
             ctrl.frames = new Sprite[2];
             ctrl.frames[0] = idleFrames[spriteIndex];
             ctrl.frames[1] = armsUpFrames[spriteIndex];
+
+            newCrowdMember.GetComponent<SpriteRenderer>().sprite = ctrl.frames[0];
         }
 
         //player.crowdMembers.Add(newCrowdMember);
@@ -256,16 +258,16 @@ public class GameController : MonoBehaviour {
             //players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button5));
             players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button6));
             players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button7));
-            players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button8));
-            players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button9));
-            players[0].availableInputs.Add(new GenericInput("Joystick 1 Horizontal", 0.75f));
-            players[0].availableInputs.Add(new GenericInput("Joystick 1 Horizontal", -0.75f));
-            players[0].availableInputs.Add(new GenericInput("Joystick 1 Vertical", 0.75f));
-            players[0].availableInputs.Add(new GenericInput("Joystick 1 Vertical", -0.75f));
-            players[0].availableInputs.Add(new GenericInput("Joystick 1 Right Vertical", 0.75f));
-            players[0].availableInputs.Add(new GenericInput("Joystick 1 Right Vertical", -0.75f));
-            players[0].availableInputs.Add(new GenericInput("Joystick 1 Right Horizontal", 0.75f));
-            players[0].availableInputs.Add(new GenericInput("Joystick 1 Right Horizontal", -0.75f));
+            //players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button8));
+            //players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button9));
+            //players[0].availableInputs.Add(new GenericInput("Joystick 1 Horizontal", 0.75f));
+            //players[0].availableInputs.Add(new GenericInput("Joystick 1 Horizontal", -0.75f));
+            //players[0].availableInputs.Add(new GenericInput("Joystick 1 Vertical", 0.75f));
+            //players[0].availableInputs.Add(new GenericInput("Joystick 1 Vertical", -0.75f));
+            //players[0].availableInputs.Add(new GenericInput("Joystick 1 Right Vertical", 0.75f));
+            //players[0].availableInputs.Add(new GenericInput("Joystick 1 Right Vertical", -0.75f));
+            //players[0].availableInputs.Add(new GenericInput("Joystick 1 Right Horizontal", 0.75f));
+            //players[0].availableInputs.Add(new GenericInput("Joystick 1 Right Horizontal", -0.75f));
             players[0].availableInputs.Add(new GenericInput("Joystick 1 D-Pad Horizontal", 0.75f));
             players[0].availableInputs.Add(new GenericInput("Joystick 1 D-Pad Horizontal", -0.75f));
             players[0].availableInputs.Add(new GenericInput("Joystick 1 D-Pad Vertical", 0.75f));
@@ -302,16 +304,16 @@ public class GameController : MonoBehaviour {
             //players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button5));
             players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button6));
             players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button7));
-            players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button8));
-            players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button9));
-            players[1].availableInputs.Add(new GenericInput("Joystick 2 Left Horizontal", 0.75f));
-            players[1].availableInputs.Add(new GenericInput("Joystick 2 Left Horizontal", -0.75f));
-            players[1].availableInputs.Add(new GenericInput("Joystick 2 Left Vertical", 0.75f));
-            players[1].availableInputs.Add(new GenericInput("Joystick 2 Left Vertical", -0.75f));
-            players[1].availableInputs.Add(new GenericInput("Joystick 2 Right Vertical", 0.75f));
-            players[1].availableInputs.Add(new GenericInput("Joystick 2 Right Vertical", -0.75f));
-            players[1].availableInputs.Add(new GenericInput("Joystick 2 Right Horizontal", 0.75f));
-            players[1].availableInputs.Add(new GenericInput("Joystick 2 Right Horizontal", -0.75f));
+            //players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button8));
+            //players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button9));
+            //players[1].availableInputs.Add(new GenericInput("Joystick 2 Left Horizontal", 0.75f));
+            //players[1].availableInputs.Add(new GenericInput("Joystick 2 Left Horizontal", -0.75f));
+            //players[1].availableInputs.Add(new GenericInput("Joystick 2 Left Vertical", 0.75f));
+            //players[1].availableInputs.Add(new GenericInput("Joystick 2 Left Vertical", -0.75f));
+            //players[1].availableInputs.Add(new GenericInput("Joystick 2 Right Vertical", 0.75f));
+            //players[1].availableInputs.Add(new GenericInput("Joystick 2 Right Vertical", -0.75f));
+            //players[1].availableInputs.Add(new GenericInput("Joystick 2 Right Horizontal", 0.75f));
+            //players[1].availableInputs.Add(new GenericInput("Joystick 2 Right Horizontal", -0.75f));
             players[1].availableInputs.Add(new GenericInput("Joystick 2 D-Pad Horizontal", 0.75f));
             players[1].availableInputs.Add(new GenericInput("Joystick 2 D-Pad Horizontal", -0.75f));
             players[1].availableInputs.Add(new GenericInput("Joystick 2 D-Pad Vertical", 0.75f));
