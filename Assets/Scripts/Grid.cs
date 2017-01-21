@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+// using System.Linq;
 
 public class GridInfo {
 	public Vector2 pos;
@@ -15,9 +16,10 @@ public class GridInfo {
 
 public class Grid {
 	
+	public List<GridInfo> grid = new List<GridInfo>();
+	
 	// both starting values have to be lower than ending
 	public Grid (int columns, int rows, Vector2 startingPos, Vector2 endingPos) {
-		List<GridInfo> grid = new List<GridInfo>();
 		
 		int totalPeople = columns * rows;
 		
@@ -39,6 +41,36 @@ public class Grid {
 		}
 		
 	}
+	
+	public Vector2 GetEmptySeat () {
+		
+		// Vector2 pos = Vector2.zero;
+		
+		// GridInfo info
+		// .Where(n => n.full == false)
+		// .Select(n => n)
+		
+		for (int i = 0; i < grid.Count; i++)
+		{
+			if (grid[i].full == false)
+			{
+				// info = grid[i];
+				// break;
+				
+				grid[i].full = true;
+				return grid[i].pos;
+			}
+		}
+		
+		// info.full = true;
+		// return info.pos;
+		
+		return Vector2.zero;
+	}
+	
+	// public void EmptySeat () {
+		
+	// }
 }
 	
 	// Use this for initialization
