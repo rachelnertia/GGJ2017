@@ -190,7 +190,17 @@ public class GameController : MonoBehaviour {
         var newCrowdMemberController = newCrowdMember.GetComponent<CrowdMemberController>();
 
         newCrowdMember.transform.position = player.crowdGrid.FillEmptySeat(newCrowdMemberController);
-        
+
+        {
+            int spriteIndex = Random.Range(0, idleFrames.Count);
+
+            var ctrl = newCrowdMember.GetComponent<CrowdMemberController>();
+
+            ctrl.frames = new Sprite[2];
+            ctrl.frames[0] = idleFrames[spriteIndex];
+            ctrl.frames[1] = armsUpFrames[spriteIndex];
+        }
+
         //player.crowdMembers.Add(newCrowdMember);
         int groupWithSpace = 0;
 
