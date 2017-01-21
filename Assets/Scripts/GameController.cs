@@ -329,8 +329,11 @@ public class GameController : MonoBehaviour {
         gameState = GameState.Warmup;
     }
 
+    public List<Sprite> idleFrames;
+    public List<Sprite> armsUpFrames;
+
     // Use this for initialization
-	void Start () {
+    void Start () {
 
         StartGame();
 	}
