@@ -77,6 +77,8 @@ public class Player {
 
     //public GameObject waveFrontMarker;
 
+    public GameController gameController;
+
     public Player() {
         availableInputs = new List<GenericInput>();
 
@@ -155,7 +157,9 @@ public class Player {
                     furthestUp = Mathf.Max(furthestUp, crowdMember.transform.position.y);
                 }
 
-                selectionRect.transform.position = new Vector2(furthestLeft, furthestUp);
+                Vector2 offset = gameController.selectionRectTopLeftOffset;
+
+                selectionRect.transform.position = new Vector2(furthestLeft + offset.x, furthestUp + offset.y);
             }
         }
 
@@ -172,6 +176,8 @@ public class GameController : MonoBehaviour {
 
     public GameObject selectionRectPrefab;
     public GameObject waveFrontMarkerPrefab;
+
+    public Vector2 selectionRectTopLeftOffset = new Vector2(0, 0);
 
     private enum GameState {
         None,
@@ -247,6 +253,7 @@ public class GameController : MonoBehaviour {
 
         {
             players[0] = new Player();
+            players[0].gameController = this;
 
             players[0].selectionRect = GameObject.Instantiate(selectionRectPrefab);
 
@@ -293,6 +300,7 @@ public class GameController : MonoBehaviour {
 
         {
             players[1] = new Player();
+            players[1].gameController = this;
 
             players[1].selectionRect = GameObject.Instantiate(selectionRectPrefab);
 
