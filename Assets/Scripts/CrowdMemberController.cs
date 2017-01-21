@@ -13,6 +13,8 @@ public class CrowdMemberController : MonoBehaviour {
 
     public Sprite[] frames = new Sprite[2];
 
+    public bool isInCurrentlySelectedGroup = false;
+
 	// Use this for initialization
 	void Start () {
 
@@ -24,7 +26,7 @@ public class CrowdMemberController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (input.IsActive()) {
+		if (isInCurrentlySelectedGroup && input.IsActive()) {
             if (!handsUp) {
                 // Go to hands up frame.
                 gameObject.GetComponent<SpriteRenderer>().sprite = frames[1];

@@ -118,7 +118,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 378aab286a8f23a4dac945299ad6dbf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  crowdSize: 100
+  groupSize: 20
   crowdMemberPrefab: {fileID: 1551631940448650, guid: 038ad60b57982a74e99d6eac4787f1dc,
+    type: 2}
+  selectionRectPrefab: {fileID: 1112602626902906, guid: 0e05589fca864fb48a27e4ceb9bb3244,
+    type: 2}
+  waveFrontMarkerPrefab: {fileID: 1923255432782578, guid: 10cc430b944b68e438e4b375feca789e,
     type: 2}
 --- !u!4 &278344351
 Transform:

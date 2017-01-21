@@ -52,26 +52,94 @@ public class GenericInput {
 }
 
 public class Player {
-    public List<GameObject> crowdMembers = new List<GameObject>();
+    //public List<GameObject> crowdMembers = new List<GameObject>();
 
     public List<GenericInput> availableInputs = new List<GenericInput>();
 
     //public HashSet<KeyCode> keysThatHaveBeenClaimed = new HashSet<KeyCode>();
-    
+
+    public GameObject selectionRect;
+
+    //public GameObject waveFrontMarker;
+
     public Player() {
         availableInputs = new List<GenericInput>();
 
-        
+        crowdMemberGroups = new List<List<GameObject>>();
+        crowdMemberGroups.Add(new List<GameObject>());
     }
 
     public Grid crowdGrid;
+
+    public List<List<GameObject>> crowdMemberGroups = new List<List<GameObject>>();
+
+    public GenericInput groupButton1;
+    public GenericInput groupButton2;
+    public GenericInput groupButton3;
+    public GenericInput groupButton4;
+
+    int currentlySelectedGroup = 0;
+
+    public void OnWarmup() {
+        int prevCurrentGroup = currentlySelectedGroup;
+
+        if (groupButton1.IsActive()) {
+            currentlySelectedGroup = 1;
+        }
+        else if (groupButton2.IsActive()) {
+            currentlySelectedGroup = 2;
+        } 
+        else if (groupButton3.IsActive()) {
+            currentlySelectedGroup = 3;
+        } 
+        else if (groupButton4.IsActive()) {
+            currentlySelectedGroup = 4;
+        }
+        else {
+            currentlySelectedGroup = 0;
+        }
+
+        if (currentlySelectedGroup != prevCurrentGroup) {
+            if (currentlySelectedGroup >= crowdMemberGroups.Count) {
+                Debug.Log("Invalid currently selected group " + currentlySelectedGroup.ToString() + 
+                    ", going back to old selection " + prevCurrentGroup.ToString());
+
+                currentlySelectedGroup = prevCurrentGroup;
+            } else {
+                Debug.Log("New selected group: " + currentlySelectedGroup.ToString());
+                // Deactivate members of previous group
+                foreach (var crowdMember in crowdMemberGroups[prevCurrentGroup]) {
+                    crowdMember.GetComponent<CrowdMemberController>().isInCurrentlySelectedGroup = false;
+                }
+
+                float furthestLeft = crowdMemberGroups[currentlySelectedGroup][0].transform.position.x;
+                float furthestUp = crowdMemberGroups[currentlySelectedGroup][0].transform.position.y;
+                
+                // Active members of the new group
+                foreach (var crowdMember in crowdMemberGroups[currentlySelectedGroup]) {
+                    crowdMember.GetComponent<CrowdMemberController>().isInCurrentlySelectedGroup = true;
+
+                    furthestLeft = Mathf.Min(furthestLeft, crowdMember.transform.position.x);
+                    furthestUp = Mathf.Max(furthestUp, crowdMember.transform.position.y);
+                }
+
+                selectionRect.transform.position = new Vector2(furthestLeft, furthestUp);
+            }
+        }
+
+        crowdGrid.CheckWave();
+    }
 }
 
 public class GameController : MonoBehaviour {
 
-    public int crowdSize = 32;
+    public int crowdSize = 100;
+    public int groupSize = 20;
 
     public GameObject crowdMemberPrefab;
+
+    public GameObject selectionRectPrefab;
+    public GameObject waveFrontMarkerPrefab;
 
     private enum GameState {
         None,
@@ -82,22 +150,45 @@ public class GameController : MonoBehaviour {
 
     private GameState gameState = GameState.None;
 
-    
-
     public Player[] players = new Player[2];
 
     public void CreateCrowdMember(Player player) {
         var newCrowdMember = GameObject.Instantiate(crowdMemberPrefab) as GameObject;
 
-        newCrowdMember.transform.position = player.crowdGrid.GetEmptySeat();
-
         var newCrowdMemberController = newCrowdMember.GetComponent<CrowdMemberController>();
-        
-        GenericInput i = player.availableInputs[Random.Range(0, player.availableInputs.Count)];
 
-        newCrowdMemberController.input = i;
+        newCrowdMember.transform.position = player.crowdGrid.FillEmptySeat(newCrowdMemberController);
 
-        player.crowdMembers.Add(newCrowdMember);
+        {
+            GenericInput i = player.availableInputs[Random.Range(0, player.availableInputs.Count)];
+
+            newCrowdMemberController.input = i;
+        }
+
+        //player.crowdMembers.Add(newCrowdMember);
+        int groupWithSpace = 0;
+
+        // Find an group.
+        for (int i = 0; i < player.crowdMemberGroups.Count; ++i) {
+            if (player.crowdMemberGroups[i].Count < groupSize) {
+                groupWithSpace = i;
+                break;
+            } else {
+                groupWithSpace++;
+            }
+        }
+
+        if (groupWithSpace < player.crowdMemberGroups.Count) {
+            // Put the new crowd member into this group.
+            Debug.Log("Adding crowd member to existing group");
+            player.crowdMemberGroups[groupWithSpace].Add(newCrowdMember);
+        } else {
+            // Make a new group and add the crowd member to it.
+            Debug.Log("Making new group");
+            var newList = new List<GameObject>();
+            newList.Add(newCrowdMember);
+            player.crowdMemberGroups.Add(newList);
+        }
     }
 
     public void StartGame() {
@@ -108,12 +199,14 @@ public class GameController : MonoBehaviour {
         {
             players[0] = new Player();
 
+            players[0].selectionRect = GameObject.Instantiate(selectionRectPrefab);
+
             players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button0));
             players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button1));
             players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button2));
             players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button3));
-            players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button4));
-            players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button5));
+            //players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button4));
+            //players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button5));
             players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button6));
             players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button7));
             players[0].availableInputs.Add(new GenericInput(KeyCode.Joystick1Button8));
@@ -130,10 +223,16 @@ public class GameController : MonoBehaviour {
             players[0].availableInputs.Add(new GenericInput("Joystick 1 D-Pad Horizontal", -0.75f));
             players[0].availableInputs.Add(new GenericInput("Joystick 1 D-Pad Vertical", 0.75f));
             players[0].availableInputs.Add(new GenericInput("Joystick 1 D-Pad Vertical", -0.75f));
-            players[0].availableInputs.Add(new GenericInput("Joystick 1 Left Trigger", 0.75f));
-            players[0].availableInputs.Add(new GenericInput("Joystick 1 Right Trigger", 0.75f));
+            //players[0].availableInputs.Add(new GenericInput("Joystick 1 Left Trigger", 0.75f));
+            //players[0].availableInputs.Add(new GenericInput("Joystick 1 Right Trigger", 0.75f));
+
+            players[0].groupButton1 = new GenericInput("Joystick 1 Left Trigger", 0.75f);
+            players[0].groupButton2 = new GenericInput("Joystick 1 Right Trigger", 0.75f);
+            players[0].groupButton3 = new GenericInput(KeyCode.Joystick1Button4); // Left bumper
+            players[0].groupButton4 = new GenericInput(KeyCode.Joystick1Button5); // Right bumper
 
             players[0].crowdGrid = new Grid(crowdSize, new Vector2(-7.0f, 2.0f), new Vector2(7.0f, -1.0f));
+            players[0].crowdGrid.currentColumnPin = GameObject.Instantiate(waveFrontMarkerPrefab);
 
             for (int i = 0; i < crowdSize; ++i) {
                 CreateCrowdMember(players[0]);
@@ -143,12 +242,14 @@ public class GameController : MonoBehaviour {
         {
             players[1] = new Player();
 
+            players[1].selectionRect = GameObject.Instantiate(selectionRectPrefab);
+
             players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button0));
             players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button1));
             players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button2));
             players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button3));
-            players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button4));
-            players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button5));
+            //players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button4));
+            //players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button5));
             players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button6));
             players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button7));
             players[1].availableInputs.Add(new GenericInput(KeyCode.Joystick2Button8));
@@ -165,10 +266,17 @@ public class GameController : MonoBehaviour {
             players[1].availableInputs.Add(new GenericInput("Joystick 2 D-Pad Horizontal", -0.75f));
             players[1].availableInputs.Add(new GenericInput("Joystick 2 D-Pad Vertical", 0.75f));
             players[1].availableInputs.Add(new GenericInput("Joystick 2 D-Pad Vertical", -0.75f));
-            players[1].availableInputs.Add(new GenericInput("Joystick 2 Left Trigger", 0.75f));
-            players[1].availableInputs.Add(new GenericInput("Joystick 2 Right Trigger", 0.75f));
+            //players[1].availableInputs.Add(new GenericInput("Joystick 2 Left Trigger", 0.75f));
+            //players[1].availableInputs.Add(new GenericInput("Joystick 2 Right Trigger", 0.75f));
+
+            players[1].groupButton1 = new GenericInput("Joystick 2 Left Trigger", 0.75f);
+            players[1].groupButton2 = new GenericInput("Joystick 2 Right Trigger", 0.75f);
+            players[1].groupButton3 = new GenericInput(KeyCode.Joystick2Button4); // Left bumper
+            players[1].groupButton4 = new GenericInput(KeyCode.Joystick2Button5); // Right bumper
 
             players[1].crowdGrid = new Grid(crowdSize, new Vector2(-7.0f, -3.0f), new Vector2(7.0f, -6.0f));
+            players[1].crowdGrid.currentColumnPin = GameObject.Instantiate(waveFrontMarkerPrefab);
+
 
             for (int i = 0; i < crowdSize; ++i) {
                 CreateCrowdMember(players[1]);
@@ -186,6 +294,17 @@ public class GameController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        switch (gameState) {
+            case GameState.Warmup:
+                players[0].OnWarmup();
+                players[1].OnWarmup();
 
+                break;
+            case GameState.InProgress:
+
+                break;
+        }
     }
+
+    //void 
 }
