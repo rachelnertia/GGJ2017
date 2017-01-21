@@ -51,6 +51,21 @@ public class GenericInput {
     }
 }
 
+public class Utilities {
+
+    public static void Shuffle<T>(List<T> list) {
+        for (var i = 0; i < list.Count; i++)
+            Swap(list, i, Random.Range(i, list.Count));
+    }
+
+    public static void Swap<T>(List<T> list, int i, int j) {
+        var temp = list[i];
+        list[i] = list[j];
+        list[j] = temp;
+    }
+
+}
+
 public class Player {
     //public List<GameObject> crowdMembers = new List<GameObject>();
 
@@ -79,6 +94,23 @@ public class Player {
     public GenericInput groupButton4;
 
     int currentlySelectedGroup = 0;
+
+    public List<List<GenericInput>> unclaimedInputsForGroups = new List<List<GenericInput>>();
+
+    public void InitialisedUnclaimedInputForGroup(int groupNum) {
+        foreach (var input in availableInputs) {
+            unclaimedInputsForGroups[groupNum].Add(input);
+        }
+
+        Utilities.Shuffle(unclaimedInputsForGroups[groupNum]);
+    }
+
+    public GenericInput GetUnclaimedInputForGroup(int groupNum) {
+        Debug.Assert(unclaimedInputsForGroups[groupNum].Count > 0);
+        var input = unclaimedInputsForGroups[groupNum][0];
+        unclaimedInputsForGroups[groupNum].RemoveAt(0);
+        return input;
+    }
 
     public void OnWarmup() {
         int prevCurrentGroup = currentlySelectedGroup;
@@ -158,13 +190,7 @@ public class GameController : MonoBehaviour {
         var newCrowdMemberController = newCrowdMember.GetComponent<CrowdMemberController>();
 
         newCrowdMember.transform.position = player.crowdGrid.FillEmptySeat(newCrowdMemberController);
-
-        {
-            GenericInput i = player.availableInputs[Random.Range(0, player.availableInputs.Count)];
-
-            newCrowdMemberController.input = i;
-        }
-
+        
         //player.crowdMembers.Add(newCrowdMember);
         int groupWithSpace = 0;
 
@@ -188,6 +214,17 @@ public class GameController : MonoBehaviour {
             var newList = new List<GameObject>();
             newList.Add(newCrowdMember);
             player.crowdMemberGroups.Add(newList);
+
+            player.unclaimedInputsForGroups.Add(new List<GenericInput>());
+            player.InitialisedUnclaimedInputForGroup(groupWithSpace);
+        }
+
+        {
+            //GenericInput i = player.availableInputs[Random.Range(0, player.availableInputs.Count)];
+
+            GenericInput i = player.GetUnclaimedInputForGroup(groupWithSpace);
+
+            newCrowdMemberController.input = i;
         }
     }
 
@@ -231,6 +268,9 @@ public class GameController : MonoBehaviour {
             players[0].groupButton3 = new GenericInput(KeyCode.Joystick1Button4); // Left bumper
             players[0].groupButton4 = new GenericInput(KeyCode.Joystick1Button5); // Right bumper
 
+            players[0].unclaimedInputsForGroups.Add(new List<GenericInput>());
+            players[0].InitialisedUnclaimedInputForGroup(0);
+
             players[0].crowdGrid = new Grid(crowdSize, new Vector2(-7.0f, 2.0f), new Vector2(7.0f, -1.0f));
             players[0].crowdGrid.currentColumnPin = GameObject.Instantiate(waveFrontMarkerPrefab);
 
@@ -273,6 +313,9 @@ public class GameController : MonoBehaviour {
             players[1].groupButton2 = new GenericInput("Joystick 2 Right Trigger", 0.75f);
             players[1].groupButton3 = new GenericInput(KeyCode.Joystick2Button4); // Left bumper
             players[1].groupButton4 = new GenericInput(KeyCode.Joystick2Button5); // Right bumper
+
+            players[1].unclaimedInputsForGroups.Add(new List<GenericInput>());
+            players[1].InitialisedUnclaimedInputForGroup(0);
 
             players[1].crowdGrid = new Grid(crowdSize, new Vector2(-7.0f, -3.0f), new Vector2(7.0f, -6.0f));
             players[1].crowdGrid.currentColumnPin = GameObject.Instantiate(waveFrontMarkerPrefab);
