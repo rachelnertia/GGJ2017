@@ -118,7 +118,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 378aab286a8f23a4dac945299ad6dbf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crowdMemberPrefab: {fileID: 0}
+  crowdMemberPrefab: {fileID: 1551631940448650, guid: 038ad60b57982a74e99d6eac4787f1dc,
+    type: 2}
 --- !u!4 &278344351
 Transform:
   m_ObjectHideFlags: 0
