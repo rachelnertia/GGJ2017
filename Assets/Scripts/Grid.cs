@@ -26,7 +26,7 @@ public class Seat {
 
 public class Grid {
 	
-	int currentColumn;
+	public int currentColumn;
 	
 	int rowCount = 4;
 	Seat[,] seatColumns;
