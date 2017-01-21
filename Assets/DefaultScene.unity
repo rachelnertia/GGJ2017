@@ -119,7 +119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   crowdSize: 40
-  groupSize: 8
+  groupSize: 4
   crowdMemberPrefab: {fileID: 1551631940448650, guid: 038ad60b57982a74e99d6eac4787f1dc,
     type: 2}
   selectionRectPrefab: {fileID: 1112602626902906, guid: 0e05589fca864fb48a27e4ceb9bb3244,

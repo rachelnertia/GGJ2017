@@ -117,21 +117,23 @@ public class Player {
     public void OnWarmup() {
         int prevCurrentGroup = currentlySelectedGroup;
 
-        if (groupButton1.IsActive()) {
-            currentlySelectedGroup = 1;
-        }
-        else if (groupButton2.IsActive()) {
-            currentlySelectedGroup = 2;
-        } 
-        else if (groupButton3.IsActive()) {
-            currentlySelectedGroup = 3;
-        } 
-        else if (groupButton4.IsActive()) {
-            currentlySelectedGroup = 4;
-        }
-        else {
-            currentlySelectedGroup = 0;
-        }
+        currentlySelectedGroup = crowdGrid.currentColumn;
+
+        //if (groupButton1.IsActive()) {
+        //    currentlySelectedGroup = 1;
+        //}
+        //else if (groupButton2.IsActive()) {
+        //    currentlySelectedGroup = 2;
+        //} 
+        //else if (groupButton3.IsActive()) {
+        //    currentlySelectedGroup = 3;
+        //} 
+        //else if (groupButton4.IsActive()) {
+        //    currentlySelectedGroup = 4;
+        //}
+        //else {
+        //    currentlySelectedGroup = 0;
+        //}
 
         if (currentlySelectedGroup != prevCurrentGroup) {
             if (currentlySelectedGroup >= crowdMemberGroups.Count) {
@@ -146,24 +148,27 @@ public class Player {
                     crowdMember.GetComponent<CrowdMemberController>().isInCurrentlySelectedGroup = false;
                 }
 
-                float furthestLeft = crowdMemberGroups[currentlySelectedGroup][0].transform.position.x;
-                float furthestUp = crowdMemberGroups[currentlySelectedGroup][0].transform.position.y;
-                
-                // Active members of the new group
-                foreach (var crowdMember in crowdMemberGroups[currentlySelectedGroup]) {
-                    crowdMember.GetComponent<CrowdMemberController>().isInCurrentlySelectedGroup = true;
-
-                    furthestLeft = Mathf.Min(furthestLeft, crowdMember.transform.position.x);
-                    furthestUp = Mathf.Max(furthestUp, crowdMember.transform.position.y);
-                }
-
-                Vector2 offset = gameController.selectionRectTopLeftOffset;
-
-                selectionRect.transform.position = new Vector2(furthestLeft + offset.x, furthestUp + offset.y);
+                ActivateGroup(currentlySelectedGroup);
             }
         }
 
         crowdGrid.CheckWave();
+    }
+
+    public void ActivateGroup(int groupIndex) {
+        float furthestLeft = crowdMemberGroups[groupIndex][0].transform.position.x;
+        float furthestUp = crowdMemberGroups[groupIndex][0].transform.position.y;
+
+        // Active members of the new group
+        foreach (var crowdMember in crowdMemberGroups[groupIndex]) {
+            crowdMember.GetComponent<CrowdMemberController>().isInCurrentlySelectedGroup = true;
+            furthestLeft = Mathf.Min(furthestLeft, crowdMember.transform.position.x);
+            furthestUp = Mathf.Max(furthestUp, crowdMember.transform.position.y);
+        }
+
+        Vector2 offset = gameController.selectionRectTopLeftOffset;
+
+        selectionRect.transform.position = new Vector2(furthestLeft + offset.x, furthestUp + offset.y);
     }
 }
 
@@ -296,6 +301,9 @@ public class GameController : MonoBehaviour {
             for (int i = 0; i < crowdSize; ++i) {
                 CreateCrowdMember(players[0]);
             }
+
+            players[0].ActivateGroup(0);
+
         }
 
         {
@@ -344,6 +352,8 @@ public class GameController : MonoBehaviour {
             for (int i = 0; i < crowdSize; ++i) {
                 CreateCrowdMember(players[1]);
             }
+
+            players[1].ActivateGroup(0);
         }
 
         gameState = GameState.Warmup;
