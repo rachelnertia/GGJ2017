@@ -169,10 +169,12 @@ public class Player {
             furthestLeft = Mathf.Min(furthestLeft, crowdMember.transform.position.x);
             furthestUp = Mathf.Max(furthestUp, crowdMember.transform.position.y);
 
-            buttonSprites[count].transform.position = crowdMember.transform.position;
+            buttonSprites[count].transform.position = crowdMember.transform.position + new Vector3(0.75f, 0.0f, 0.0f);
             buttonSprites[count].GetComponent<SpriteRenderer>().sprite =
                 gameController.GetSpriteForInput(
                     crowdMember.GetComponent<CrowdMemberController>().input);
+
+            count++;
         }
 
         Vector2 offset = gameController.selectionRectTopLeftOffset;
@@ -263,9 +265,9 @@ public class GameController : MonoBehaviour {
                 else if (input.buttonOrAxisName == "Joystick 1 D-Pad Vertical" ||
                     input.buttonOrAxisName == "Joystick 2 D-Pad Vertical") {
                     if (input.axisNegative) {
-                        return LeftButtonSprite;
+                        return DownButtonSprite;
                     } else {
-                        return RightButtonSprite;
+                        return UpButtonSprite;
                     }
                 }
 
