@@ -41,12 +41,14 @@ public class Score : MonoBehaviour {
 		{
 			Debug.Log("A Team One");
 			gameOverTeam1.SetActive(true);
+			GameController.gameState = GameController.GameState.End;
 		}
 		
 		if (scoreRatio >= 1)
 		{
 			Debug.Log("Bees");
 			gameOverTeam0.SetActive(true);
+			GameController.gameState = GameController.GameState.End;
 		}
 		
 		Debug.Log(v);

@@ -122,7 +122,7 @@ public class Player {
         return input;
     }
 
-    public void OnWarmup() {
+    public void OnUpdate() {
         int prevCurrentGroup = currentlySelectedGroup;
 
         currentlySelectedGroup = crowdGrid.currentColumn;
@@ -209,14 +209,14 @@ public class GameController : MonoBehaviour {
 
     public GameObject buttonSpritePrefab;
 
-    private enum GameState {
+    public enum GameState {
         None,
         Warmup,
         InProgress,
         End
     }
 
-    private GameState gameState = GameState.None;
+    public static GameState gameState = GameState.None;
 
     public Sprite AButtonSprite;
     public Sprite XButtonSprite;
@@ -476,7 +476,7 @@ public class GameController : MonoBehaviour {
             players[1].ActivateGroup(0);
         }
 
-        gameState = GameState.Warmup;
+        gameState = GameState.InProgress;
     }
 
     public List<Sprite> idleFramesPlayer1;
@@ -494,8 +494,8 @@ public class GameController : MonoBehaviour {
 	void Update () {
         switch (gameState) {
             case GameState.Warmup:
-                players[0].OnWarmup();
-                players[1].OnWarmup();
+                players[0].OnUpdate();
+                players[1].OnUpdate();
 
                 break;
             case GameState.InProgress:

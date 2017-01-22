@@ -30,31 +30,34 @@ public class CrowdMemberController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (isInCurrentlySelectedGroup && input.IsActive()) {
-            if (!handsUp) {
-                // Go to hands up frame.
-                gameObject.GetComponent<SpriteRenderer>().sprite = frames[1];
-                transform.position = new Vector2(transform.position.x, transform.position.y + jumpHeight);
+		if (GameController.gameState == GameController.GameState.InProgress)
+		{
+			if (isInCurrentlySelectedGroup && input.IsActive()) {
+				if (!handsUp) {
+					// Go to hands up frame.
+					gameObject.GetComponent<SpriteRenderer>().sprite = frames[1];
+					transform.position = new Vector2(transform.position.x, transform.position.y + jumpHeight);
 
 
-                handsUp = true;
-            }
+					handsUp = true;
+				}
 
-            handsUpTime = 0.0f;
-        } else {
-            
+				handsUpTime = 0.0f;
+			} else {
+				
 
-            handsUpTime += Time.deltaTime;
+				handsUpTime += Time.deltaTime;
 
-            if (handsUp) {
-                if (handsUpTime > putHandsDownCooldown / grid.timeMultiplier) {
-                    // Go to hands down frame.
-                    gameObject.GetComponent<SpriteRenderer>().sprite = frames[0];
-                    transform.position = memberPosition;
+				if (handsUp) {
+					if (handsUpTime > putHandsDownCooldown / grid.timeMultiplier) {
+						// Go to hands down frame.
+						gameObject.GetComponent<SpriteRenderer>().sprite = frames[0];
+						transform.position = memberPosition;
 
-                    handsUp = false;
-                }
-            }
-        }
+						handsUp = false;
+					}
+				}
+			}
+		}
 	}
 }
