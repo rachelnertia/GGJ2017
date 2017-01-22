@@ -711,6 +711,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 2046108664}
+  gameOverTeam0: {fileID: 108241171}
+  gameOverTeam1: {fileID: 946682017}
   playerScores: []
   scoreRatio: 0
 --- !u!1 &933276770
@@ -796,7 +798,7 @@ GameObject:
   m_Component:
   - component: {fileID: 946682018}
   m_Layer: 5
-  m_Name: GameOverTeam0 (1)
+  m_Name: GameOverTeam1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

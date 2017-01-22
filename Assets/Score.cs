@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class Score : MonoBehaviour {
 	
 	public Slider slider;
+	public GameObject gameOverTeam0;
+	public GameObject gameOverTeam1;
 	
 	[HideInInspector]
 	public float[] playerScores;
@@ -22,11 +24,11 @@ public class Score : MonoBehaviour {
 		
 		if (team == 0)
 		{
-			score += s;
+			score -= s;
 		}
 		if (team == 1)
 		{
-			score -= s;
+			score += s;
 		}
 		
 		Debug.Log(s);
@@ -38,11 +40,13 @@ public class Score : MonoBehaviour {
 		if (scoreRatio <= 0)
 		{
 			Debug.Log("A Team One");
+			gameOverTeam1.SetActive(true);
 		}
 		
 		if (scoreRatio >= 1)
 		{
 			Debug.Log("Bees");
+			gameOverTeam0.SetActive(true);
 		}
 		
 		Debug.Log(v);

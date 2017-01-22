@@ -10,6 +10,8 @@ public class CrowdMemberController : MonoBehaviour {
     public bool AreHandsUp() {
         return handsUp;
     }
+	
+	public Grid grid;
 
     public GenericInput input;
 
@@ -45,7 +47,7 @@ public class CrowdMemberController : MonoBehaviour {
             handsUpTime += Time.deltaTime;
 
             if (handsUp) {
-                if (handsUpTime > putHandsDownCooldown) {
+                if (handsUpTime > putHandsDownCooldown / grid.timeMultiplier) {
                     // Go to hands down frame.
                     gameObject.GetComponent<SpriteRenderer>().sprite = frames[0];
                     transform.position = memberPosition;
