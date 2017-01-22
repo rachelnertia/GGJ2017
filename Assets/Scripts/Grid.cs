@@ -27,11 +27,17 @@ public class Seat {
 public class Grid {
 	
 	public int currentColumn;
+	public float scoreMultiplier = 1;
+	public float scoreMultiplierIncrease = 1;
+	
+	public float timeMultiplier = 1;
+	public float timeMultiplierIncrease = 0.1f;
 	
 	int rowCount = 4;
 	Seat[,] seatColumns;
 	
 	public GameObject currentColumnPin;
+	public int teamNo;
 	
 	public List<GridInfo> grid = new List<GridInfo>();
 	
@@ -39,7 +45,7 @@ public class Grid {
 	// public Vector2 startPos;
 	private float[] columnPositions;
 	
-	private int score;
+	// private float score;
 	
 	// both starting values have to be lower than ending
 	public Grid (int crowdSize, Vector2 startingPos, Vector2 endingPos) {
@@ -158,22 +164,31 @@ public class Grid {
 		}
 		
 		// MEGA DEBUG
-		// if (Input.GetKeyDown("Alpha"+currentColumn))
-		if (Input.GetKeyDown("m"))
+		// if (Input.GetKeyDown("Alpha"+currentColumn);
+		if (Input.GetKeyDown("q") && teamNo == 0)
+		{
+			done = true;
+		}
+		if (Input.GetKeyDown("m") && teamNo == 1)
 		{
 			done = true;
 		}
 		
 		if (done == true)
 		{
-			Debug.Log("DONE");
+			// Debug.Log("DONE");
 			currentColumn++;
 			if (currentColumn == seatColumns.GetLength(0))
 			{
 				currentColumn = 0;
+				
+				scoreMultiplier += scoreMultiplierIncrease;
+				timeMultiplier += timeMultiplierIncrease;
 			}
 			
-			score++;
+			// score += 1 * multiplier;
+			float score = 1 * scoreMultiplier;
+			GameObject.Find("GameObject").GetComponent<Score>().UpdateScore(teamNo, score);
 		}
 	}
 }
