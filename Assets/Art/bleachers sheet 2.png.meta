@@ -1,9 +1,12 @@
 fileFormatVersion: 2
 guid: ac482120c7421f74f8d9d48265146e9c
-timeCreated: 1485084926
+timeCreated: 1485089914
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: bleachers sheet 2_0
+    21300002: bleachers sheet 2_1
+    21300004: bleachers sheet 2_2
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -40,7 +43,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 500
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -68,7 +71,46 @@ TextureImporter:
     overridden: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: bleachers sheet 2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 470
+        width: 1024
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: bleachers sheet 2_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 235
+        width: 1024
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: bleachers sheet 2_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1024
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
     outline: []
   spritePackingTag: 
   userData: 
