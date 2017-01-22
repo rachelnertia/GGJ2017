@@ -287,7 +287,7 @@ public class GameController : MonoBehaviour {
         var newCrowdMemberController = newCrowdMember.GetComponent<CrowdMemberController>();
 
         newCrowdMember.transform.position = player.crowdGrid.FillEmptySeat(newCrowdMemberController);
-
+        newCrowdMemberController.memberPosition = newCrowdMember.transform.position;
         {
             int spriteIndex = Random.Range(0, idleFrames.Count);
 
