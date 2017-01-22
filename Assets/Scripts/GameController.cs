@@ -38,17 +38,26 @@ public class GenericInput {
     public bool IsActive() {
         switch (type) {
             case Type.Button:
-                return Input.GetButton(buttonOrAxisName);
+                return Input.GetButtonDown(buttonOrAxisName);
             case Type.Axis:
-                return axisNegative ? 
-                    Input.GetAxis(buttonOrAxisName) < axisThreshold : 
+
+                bool current = axisNegative ? 
+                    Input.GetAxis(buttonOrAxisName) < axisThreshold: 
                     Input.GetAxis(buttonOrAxisName) > axisThreshold;
+
+                bool temp = prevAxisValue;
+
+                prevAxisValue = current;
+
+                return current && !temp;
             case Type.KeyCode:
-                return Input.GetKey(keyCode);
+                return Input.GetKeyDown(keyCode);
         }
 
         return false;
     }
+
+    bool prevAxisValue = false;
 }
 
 public class Utilities {
@@ -150,6 +159,23 @@ public class Player {
 
                 currentlySelectedGroup = prevCurrentGroup;
             } else {
+                Debug.Log("New selected group: " + currentlySelectedGroup.ToString());
+                // Deactivate members of previous group
+                foreach (var crowdMember in crowdMemberGroups[prevCurrentGroup]) {
+                    crowdMember.GetComponent<CrowdMemberController>().isInCurrentlySelectedGroup = false;
+                }
+
+                ActivateGroup(currentlySelectedGroup);
+            }
+        }
+
+        foreach (var input in unclaimedInputsForGroups[currentlySelectedGroup]) {
+            if (input.IsActive() && currentlySelectedGroup != 0) {
+                // Reset the wave:
+                crowdGrid.currentColumn = 0;
+                prevCurrentGroup = currentlySelectedGroup;
+                currentlySelectedGroup = 0;
+                Debug.Log("Resetting the wave");
                 Debug.Log("New selected group: " + currentlySelectedGroup.ToString());
                 // Deactivate members of previous group
                 foreach (var crowdMember in crowdMemberGroups[prevCurrentGroup]) {
