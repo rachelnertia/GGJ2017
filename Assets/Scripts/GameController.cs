@@ -106,6 +106,8 @@ public class Player {
     public List<List<GenericInput>> unclaimedInputsForGroups = new List<List<GenericInput>>();
 
     public void InitialisedUnclaimedInputForGroup(int groupNum) {
+        unclaimedInputsForGroups[groupNum] = new List<GenericInput>();
+
         foreach (var input in availableInputs) {
             unclaimedInputsForGroups[groupNum].Add(input);
         }
@@ -162,12 +164,19 @@ public class Player {
     }
 
     public void ActivateGroup(int groupIndex) {
+        // Scramble
+        InitialisedUnclaimedInputForGroup(groupIndex);
+
         float furthestLeft = crowdMemberGroups[groupIndex][0].transform.position.x;
         float furthestUp = crowdMemberGroups[groupIndex][0].transform.position.y;
 
         // Active members of the new group
         int count = 0;
         foreach (var crowdMember in crowdMemberGroups[groupIndex]) {
+            // Give a new input.
+            GenericInput i = GetUnclaimedInputForGroup(groupIndex);
+            crowdMember.GetComponent<CrowdMemberController>().input = i;
+
             crowdMember.GetComponent<CrowdMemberController>().isInCurrentlySelectedGroup = true;
             furthestLeft = Mathf.Min(furthestLeft, crowdMember.transform.position.x);
             furthestUp = Mathf.Max(furthestUp, crowdMember.transform.position.y);
