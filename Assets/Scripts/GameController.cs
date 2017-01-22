@@ -493,12 +493,9 @@ public class GameController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         switch (gameState) {
-            case GameState.Warmup:
+            case GameState.InProgress:
                 players[0].OnUpdate();
                 players[1].OnUpdate();
-
-                break;
-            case GameState.InProgress:
 
                 break;
         }
