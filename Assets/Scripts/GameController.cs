@@ -106,6 +106,8 @@ public class Player {
     public List<List<GenericInput>> unclaimedInputsForGroups = new List<List<GenericInput>>();
 
     public void InitialisedUnclaimedInputForGroup(int groupNum) {
+        unclaimedInputsForGroups[groupNum] = new List<GenericInput>();
+
         foreach (var input in availableInputs) {
             unclaimedInputsForGroups[groupNum].Add(input);
         }
@@ -120,7 +122,7 @@ public class Player {
         return input;
     }
 
-    public void OnWarmup() {
+    public void OnUpdate() {
         int prevCurrentGroup = currentlySelectedGroup;
 
         currentlySelectedGroup = crowdGrid.currentColumn;
@@ -162,12 +164,19 @@ public class Player {
     }
 
     public void ActivateGroup(int groupIndex) {
+        // Scramble
+        InitialisedUnclaimedInputForGroup(groupIndex);
+
         float furthestLeft = crowdMemberGroups[groupIndex][0].transform.position.x;
         float furthestUp = crowdMemberGroups[groupIndex][0].transform.position.y;
 
         // Active members of the new group
         int count = 0;
         foreach (var crowdMember in crowdMemberGroups[groupIndex]) {
+            // Give a new input.
+            GenericInput i = GetUnclaimedInputForGroup(groupIndex);
+            crowdMember.GetComponent<CrowdMemberController>().input = i;
+
             crowdMember.GetComponent<CrowdMemberController>().isInCurrentlySelectedGroup = true;
             furthestLeft = Mathf.Min(furthestLeft, crowdMember.transform.position.x);
             furthestUp = Mathf.Max(furthestUp, crowdMember.transform.position.y);
@@ -200,14 +209,14 @@ public class GameController : MonoBehaviour {
 
     public GameObject buttonSpritePrefab;
 
-    private enum GameState {
+    public enum GameState {
         None,
         Warmup,
         InProgress,
         End
     }
 
-    private GameState gameState = GameState.None;
+    public static GameState gameState = GameState.None;
 
     public Sprite AButtonSprite;
     public Sprite XButtonSprite;
@@ -290,7 +299,9 @@ public class GameController : MonoBehaviour {
         var newCrowdMember = GameObject.Instantiate(crowdMemberPrefab) as GameObject;
 
         var newCrowdMemberController = newCrowdMember.GetComponent<CrowdMemberController>();
-
+		
+		newCrowdMemberController.grid = player.crowdGrid;
+		
         newCrowdMember.transform.position = player.crowdGrid.FillEmptySeat(newCrowdMemberController);   
         newCrowdMember.transform.position = new Vector2 (newCrowdMember.transform.position.x + Random.Range(-0.2f, 0.2f), newCrowdMember.transform.position.y);
         newCrowdMemberController.memberPosition = newCrowdMember.transform.position;
@@ -394,6 +405,7 @@ public class GameController : MonoBehaviour {
 
             players[0].crowdGrid = new Grid(crowdSize, new Vector2(-7.0f, 2.0f), new Vector2(7.0f, -1.0f));
             players[0].crowdGrid.currentColumnPin = GameObject.Instantiate(waveFrontMarkerPrefab);
+            players[0].crowdGrid.teamNo = 0;
 
             players[0].idleFrames = idleFramesPlayer1;
             players[0].armsUpFrames = armsUpFramesPlayer1;
@@ -452,6 +464,7 @@ public class GameController : MonoBehaviour {
 
             players[1].crowdGrid = new Grid(crowdSize, new Vector2(-7.0f, -3.0f), new Vector2(7.0f, -6.0f));
             players[1].crowdGrid.currentColumnPin = GameObject.Instantiate(waveFrontMarkerPrefab);
+			players[1].crowdGrid.teamNo = 1;
 
             players[1].idleFrames = idleFramesPlayer2;
             players[1].armsUpFrames = armsUpFramesPlayer2;
@@ -463,7 +476,7 @@ public class GameController : MonoBehaviour {
             players[1].ActivateGroup(0);
         }
 
-        gameState = GameState.Warmup;
+        gameState = GameState.InProgress;
     }
 
     public List<Sprite> idleFramesPlayer1;
@@ -480,12 +493,9 @@ public class GameController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         switch (gameState) {
-            case GameState.Warmup:
-                players[0].OnWarmup();
-                players[1].OnWarmup();
-
-                break;
             case GameState.InProgress:
+                players[0].OnUpdate();
+                players[1].OnUpdate();
 
                 break;
         }
