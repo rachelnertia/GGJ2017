@@ -5,6 +5,8 @@ using UnityEngine;
 public class CrowdMemberController : MonoBehaviour {
 
     private bool handsUp;
+    public float jumpHeight;
+    public Vector2 memberPosition; 
     public bool AreHandsUp() {
         return handsUp;
     }
@@ -30,6 +32,8 @@ public class CrowdMemberController : MonoBehaviour {
             if (!handsUp) {
                 // Go to hands up frame.
                 gameObject.GetComponent<SpriteRenderer>().sprite = frames[1];
+                transform.position = new Vector2(transform.position.x, transform.position.y + jumpHeight);
+
 
                 handsUp = true;
             }
@@ -44,6 +48,7 @@ public class CrowdMemberController : MonoBehaviour {
                 if (handsUpTime > putHandsDownCooldown) {
                     // Go to hands down frame.
                     gameObject.GetComponent<SpriteRenderer>().sprite = frames[0];
+                    transform.position = memberPosition;
 
                     handsUp = false;
                 }
