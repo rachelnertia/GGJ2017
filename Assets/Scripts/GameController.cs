@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GenericInput {
     public enum Type {
@@ -523,6 +524,12 @@ public class GameController : MonoBehaviour {
                 players[0].OnUpdate();
                 players[1].OnUpdate();
 
+                break;
+
+            case GameState.End:
+                if (Input.GetKeyDown(KeyCode.Space)) {
+                    SceneManager.LoadScene("DefaultScene");
+                }
                 break;
         }
     }
