@@ -33,6 +33,8 @@ public class Grid {
 	public float timeMultiplier = 1;
 	public float timeMultiplierIncrease = 0.1f;
 	
+	public Score scoreScript;
+	
 	int rowCount = 4;
 	Seat[,] seatColumns;
 	
@@ -51,6 +53,8 @@ public class Grid {
 	public Grid (int crowdSize, Vector2 startingPos, Vector2 endingPos) {
 		
 		// startPos = startingPos;
+		
+		scoreScript = GameObject.Find("ScoreObject").GetComponent<Score>();
 		
 		int rows = rowCount;
 		int columns = crowdSize/rows;
@@ -188,7 +192,7 @@ public class Grid {
 			
 			// score += 1 * multiplier;
 			float score = 1 * scoreMultiplier;
-			GameObject.Find("GameObject").GetComponent<Score>().UpdateScore(teamNo, score);
+			scoreScript.UpdateScore(teamNo, score);
 		}
 	}
 }
