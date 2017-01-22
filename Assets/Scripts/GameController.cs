@@ -9,13 +9,13 @@ public class GenericInput {
         KeyCode
     }
 
-    private Type type;
+    public Type type;
 
-    private string buttonOrAxisName;
-    private KeyCode keyCode;
+    public string buttonOrAxisName;
+    public KeyCode keyCode;
 
     private float axisThreshold;
-    private bool axisNegative;
+    public bool axisNegative;
 
     public GenericInput(string buttonName) {
         this.type = Type.Button;
@@ -78,6 +78,9 @@ public class Player {
     //public GameObject waveFrontMarker;
 
     public GameController gameController;
+
+
+    public List<GameObject> buttonSprites;
 
     public Player() {
         availableInputs = new List<GenericInput>();
@@ -160,10 +163,16 @@ public class Player {
         float furthestUp = crowdMemberGroups[groupIndex][0].transform.position.y;
 
         // Active members of the new group
+        int count = 0;
         foreach (var crowdMember in crowdMemberGroups[groupIndex]) {
             crowdMember.GetComponent<CrowdMemberController>().isInCurrentlySelectedGroup = true;
             furthestLeft = Mathf.Min(furthestLeft, crowdMember.transform.position.x);
             furthestUp = Mathf.Max(furthestUp, crowdMember.transform.position.y);
+
+            buttonSprites[count].transform.position = crowdMember.transform.position;
+            buttonSprites[count].GetComponent<SpriteRenderer>().sprite =
+                gameController.GetSpriteForInput(
+                    crowdMember.GetComponent<CrowdMemberController>().input);
         }
 
         Vector2 offset = gameController.selectionRectTopLeftOffset;
@@ -184,6 +193,8 @@ public class GameController : MonoBehaviour {
 
     public Vector2 selectionRectTopLeftOffset = new Vector2(0, 0);
 
+    public GameObject buttonSpritePrefab;
+
     private enum GameState {
         None,
         Warmup,
@@ -192,6 +203,81 @@ public class GameController : MonoBehaviour {
     }
 
     private GameState gameState = GameState.None;
+
+    public Sprite AButtonSprite;
+    public Sprite XButtonSprite;
+    public Sprite BButtonSprite;
+    public Sprite YButtonSprite;
+    public Sprite BackButtonSprite;
+    public Sprite StartButtonSprite;
+    public Sprite DownButtonSprite;
+    public Sprite UpButtonSprite;
+    public Sprite LeftButtonSprite;
+    public Sprite RightButtonSprite;
+    public Sprite UnknownButtonSprite;
+
+    public Sprite GetSpriteForInput(GenericInput input) {
+        switch (input.type) {
+            case GenericInput.Type.KeyCode:
+                switch (input.keyCode) {
+                    case KeyCode.Joystick1Button0:
+                        return AButtonSprite;
+                    case KeyCode.Joystick1Button1:
+                        return BButtonSprite;
+                    case KeyCode.Joystick1Button2:
+                        return XButtonSprite;
+                    case KeyCode.Joystick1Button3:
+                        return YButtonSprite;
+                    case KeyCode.Joystick1Button6:
+                        return BackButtonSprite;
+                    case KeyCode.Joystick1Button7:
+                        return StartButtonSprite;
+
+                    case KeyCode.Joystick2Button0:
+                        return AButtonSprite;
+                    case KeyCode.Joystick2Button1:
+                        return BButtonSprite;
+                    case KeyCode.Joystick2Button2:
+                        return XButtonSprite;
+                    case KeyCode.Joystick2Button3:
+                        return YButtonSprite;
+                    case KeyCode.Joystick2Button6:
+                        return BackButtonSprite;
+                    case KeyCode.Joystick2Button7:
+                        return StartButtonSprite;
+
+                    default:
+                        return UnknownButtonSprite;
+                }
+
+            case GenericInput.Type.Axis:
+                if (input.buttonOrAxisName == "Joystick 1 D-Pad Horizontal" ||
+                    input.buttonOrAxisName == "Joystick 2 D-Pad Horizontal") 
+                {
+                    if (input.axisNegative) {
+                        return LeftButtonSprite;
+                    } else {
+                        return RightButtonSprite;
+                    }
+                }
+                else if (input.buttonOrAxisName == "Joystick 1 D-Pad Vertical" ||
+                    input.buttonOrAxisName == "Joystick 2 D-Pad Vertical") {
+                    if (input.axisNegative) {
+                        return LeftButtonSprite;
+                    } else {
+                        return RightButtonSprite;
+                    }
+                }
+
+                return UnknownButtonSprite;
+                
+            case GenericInput.Type.Button:
+                return UnknownButtonSprite;
+
+            default:
+                return UnknownButtonSprite;
+        }
+    }
 
     public Player[] players = new Player[2];
 
@@ -292,6 +378,11 @@ public class GameController : MonoBehaviour {
             players[0].groupButton3 = new GenericInput(KeyCode.Joystick1Button4); // Left bumper
             players[0].groupButton4 = new GenericInput(KeyCode.Joystick1Button5); // Right bumper
 
+            players[0].buttonSprites = new List<GameObject>();
+            for (int i = 0; i < groupSize; ++i) {
+                players[0].buttonSprites.Add(GameObject.Instantiate(buttonSpritePrefab));
+            }
+
             players[0].unclaimedInputsForGroups.Add(new List<GenericInput>());
             players[0].InitialisedUnclaimedInputForGroup(0);
 
@@ -345,9 +436,13 @@ public class GameController : MonoBehaviour {
             players[1].unclaimedInputsForGroups.Add(new List<GenericInput>());
             players[1].InitialisedUnclaimedInputForGroup(0);
 
+            players[1].buttonSprites = new List<GameObject>();
+            for (int i = 0; i < groupSize; ++i) {
+                players[1].buttonSprites.Add(GameObject.Instantiate(buttonSpritePrefab));
+            }
+
             players[1].crowdGrid = new Grid(crowdSize, new Vector2(-7.0f, -3.0f), new Vector2(7.0f, -6.0f));
             players[1].crowdGrid.currentColumnPin = GameObject.Instantiate(waveFrontMarkerPrefab);
-
 
             for (int i = 0; i < crowdSize; ++i) {
                 CreateCrowdMember(players[1]);
