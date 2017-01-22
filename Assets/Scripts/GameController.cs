@@ -93,6 +93,9 @@ public class Player {
 
     public List<List<GameObject>> crowdMemberGroups = new List<List<GameObject>>();
 
+    public List<Sprite> idleFrames;
+    public List<Sprite> armsUpFrames;
+
     public GenericInput groupButton1;
     public GenericInput groupButton2;
     public GenericInput groupButton3;
@@ -282,7 +285,7 @@ public class GameController : MonoBehaviour {
     }
 
     public Player[] players = new Player[2];
-
+    
     public void CreateCrowdMember(Player player) {
         var newCrowdMember = GameObject.Instantiate(crowdMemberPrefab) as GameObject;
 
@@ -292,13 +295,13 @@ public class GameController : MonoBehaviour {
         newCrowdMember.transform.position = new Vector2 (newCrowdMember.transform.position.x + Random.Range(-0.2f, 0.2f), newCrowdMember.transform.position.y);
         newCrowdMemberController.memberPosition = newCrowdMember.transform.position;
         {
-            int spriteIndex = Random.Range(0, idleFrames.Count);
+            int spriteIndex = Random.Range(0, player.idleFrames.Count);
 
             var ctrl = newCrowdMember.GetComponent<CrowdMemberController>();
 
             ctrl.frames = new Sprite[2];
-            ctrl.frames[0] = idleFrames[spriteIndex];
-            ctrl.frames[1] = armsUpFrames[spriteIndex];
+            ctrl.frames[0] = player.idleFrames[spriteIndex];
+            ctrl.frames[1] = player.armsUpFrames[spriteIndex];
 
             newCrowdMember.GetComponent<SpriteRenderer>().sprite = ctrl.frames[0];
         }
@@ -392,6 +395,9 @@ public class GameController : MonoBehaviour {
             players[0].crowdGrid = new Grid(crowdSize, new Vector2(-7.0f, 2.0f), new Vector2(7.0f, -1.0f));
             players[0].crowdGrid.currentColumnPin = GameObject.Instantiate(waveFrontMarkerPrefab);
 
+            players[0].idleFrames = idleFramesPlayer1;
+            players[0].armsUpFrames = armsUpFramesPlayer1;
+
             for (int i = 0; i < crowdSize; ++i) {
                 CreateCrowdMember(players[0]);
             }
@@ -447,6 +453,9 @@ public class GameController : MonoBehaviour {
             players[1].crowdGrid = new Grid(crowdSize, new Vector2(-7.0f, -3.0f), new Vector2(7.0f, -6.0f));
             players[1].crowdGrid.currentColumnPin = GameObject.Instantiate(waveFrontMarkerPrefab);
 
+            players[1].idleFrames = idleFramesPlayer2;
+            players[1].armsUpFrames = armsUpFramesPlayer2;
+
             for (int i = 0; i < crowdSize; ++i) {
                 CreateCrowdMember(players[1]);
             }
@@ -457,8 +466,10 @@ public class GameController : MonoBehaviour {
         gameState = GameState.Warmup;
     }
 
-    public List<Sprite> idleFrames;
-    public List<Sprite> armsUpFrames;
+    public List<Sprite> idleFramesPlayer1;
+    public List<Sprite> idleFramesPlayer2;
+    public List<Sprite> armsUpFramesPlayer1;
+    public List<Sprite> armsUpFramesPlayer2;
 
     // Use this for initialization
     void Start () {
